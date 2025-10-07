@@ -22,19 +22,17 @@ public class HttpResponseTest {
     public void forwardHtmlFileWithCorrectHttpResponse() throws IOException {
         // given
         String outputPath = TEST_DIRECTORY + "forward_output.txt";
-        String testWebappPath = "src/test/resources/response";
-        HttpResponse httpResponse = new HttpResponse(outputStreamToFile(outputPath), testWebappPath);
-        
+        HttpResponse httpResponse = new HttpResponse(outputStreamToFile(outputPath));
+
         // when
-        httpResponse.forward("/test.html");
-        
+        httpResponse.forward("/index.html");
+
         // then
         String responseContent = Files.readString(Paths.get(outputPath));
         assertTrue(responseContent.contains("HTTP/1.1 200 OK"));
         assertTrue(responseContent.contains("Content-Type: text/html"));
         assertTrue(responseContent.contains("Content-Length:"));
-        assertTrue(responseContent.contains("Test HTML Content"));
-        
+
         // cleanup
         Files.deleteIfExists(Paths.get(outputPath));
     }

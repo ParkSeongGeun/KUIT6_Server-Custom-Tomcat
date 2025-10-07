@@ -42,8 +42,7 @@ public class UserLoginControllerTest {
     @DisplayName("올바른 계정 정보로 로그인하면 메인 페이지로 리다이렉트되어야 한다")
     public void loginSuccessWithValidCredentials() throws IOException {
         // given
-        when(mockRequest.getMethod()).thenReturn(HttpMethod.POST);
-        when(mockRequest.getBody()).thenReturn("userId=testuser&password=1234");
+        when(mockRequest.getParameters()).thenReturn(java.util.Map.of("userId", "testuser", "password", "1234"));
 
         // when
         controller.execute(mockRequest, mockResponse);
@@ -56,8 +55,7 @@ public class UserLoginControllerTest {
     @DisplayName("잘못된 비밀번호로 로그인하면 로그인 실패 페이지로 리다이렉트되어야 한다")
     public void loginFailWithWrongPassword() throws IOException {
         // given
-        when(mockRequest.getMethod()).thenReturn(HttpMethod.POST);
-        when(mockRequest.getBody()).thenReturn("userId=testuser&password=wrongpassword");
+        when(mockRequest.getParameters()).thenReturn(java.util.Map.of("userId", "testuser", "password", "wrongpassword"));
 
         // when
         controller.execute(mockRequest, mockResponse);
@@ -70,8 +68,7 @@ public class UserLoginControllerTest {
     @DisplayName("존재하지 않는 사용자로 로그인하면 로그인 실패 페이지로 리다이렉트되어야 한다")
     public void loginFailWithNonExistentUser() throws IOException {
         // given
-        when(mockRequest.getMethod()).thenReturn(HttpMethod.POST);
-        when(mockRequest.getBody()).thenReturn("userId=nonexistent&password=1234");
+        when(mockRequest.getParameters()).thenReturn(java.util.Map.of("userId", "nonexistent", "password", "1234"));
 
         // when
         controller.execute(mockRequest, mockResponse);
@@ -84,8 +81,7 @@ public class UserLoginControllerTest {
     @DisplayName("빈 파라미터로 로그인하면 로그인 실패 페이지로 리다이렉트되어야 한다")
     public void loginFailWithEmptyParameters() throws IOException {
         // given
-        when(mockRequest.getMethod()).thenReturn(HttpMethod.POST);
-        when(mockRequest.getBody()).thenReturn("");
+        when(mockRequest.getParameters()).thenReturn(java.util.Map.of());
 
         // when
         controller.execute(mockRequest, mockResponse);

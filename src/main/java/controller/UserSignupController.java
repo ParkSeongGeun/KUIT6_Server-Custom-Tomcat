@@ -5,7 +5,6 @@ import http.HttpRequest;
 import http.HttpResponse;
 import http.enums.HttpMethod;
 import http.enums.RequestPath;
-import http.util.HttpRequestUtils;
 import model.User;
 import model.UserField;
 
@@ -19,10 +18,8 @@ public class UserSignupController implements Controller {
 
     @Override
     public void execute(HttpRequest request, HttpResponse response) throws IOException {
-        Map<String, String> params;
-
-        // body에서 파라미터 추출
-        params = HttpRequestUtils.parseQueryParameter(request.getBody());
+        // 파라미터 추출
+        Map<String, String> params = request.getParameters();
         log.log(Level.INFO, "POST Signup params: " + params);
 
         // 필수 필드 검증

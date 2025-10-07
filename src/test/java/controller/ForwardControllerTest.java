@@ -21,12 +21,11 @@ public class ForwardControllerTest {
     @Mock
     private HttpResponse mockResponse;
 
-    private ForwardController controller;
+    private final ForwardController controller = new ForwardController();
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        controller = new ForwardController();
     }
 
     @Test

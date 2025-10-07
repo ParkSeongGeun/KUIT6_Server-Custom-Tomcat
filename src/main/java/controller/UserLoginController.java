@@ -4,7 +4,6 @@ import db.MemoryUserRepository;
 import http.HttpRequest;
 import http.HttpResponse;
 import http.enums.RequestPath;
-import http.util.HttpRequestUtils;
 import model.User;
 import model.UserField;
 
@@ -18,7 +17,7 @@ public class UserLoginController implements Controller {
 
     @Override
     public void execute(HttpRequest request, HttpResponse response) throws IOException {
-        Map<String, String> params = HttpRequestUtils.parseQueryParameter(request.getBody());
+        Map<String, String> params = request.getParameters();
 
         String userId = params.get(UserField.USER_ID.getValue());
         String password = params.get(UserField.PASSWORD.getValue());

@@ -1,23 +1,27 @@
 package http.enums;
 
 public enum HttpStatus {
-    OK(200, "HTTP/1.1 200 OK"),
-    FOUND(302, "HTTP/1.1 302 Found"),
-    NOT_FOUND(404, "HTTP/1.1 404 Not Found");
+    OK(200, "OK"),
+    FOUND(302, "Found"),
+    NOT_FOUND(404, "Not Found");
 
     private final int code;
-    private final String statusLine;
+    private final String reasonPhrase;
 
-    HttpStatus(int code, String statusLine) {
+    HttpStatus(int code, String reasonPhrase) {
         this.code = code;
-        this.statusLine = statusLine;
+        this.reasonPhrase = reasonPhrase;
     }
 
     public int getCode() {
         return code;
     }
 
-    public String getStatusLine() {
-        return statusLine;
+    public String getReasonPhrase() {
+        return reasonPhrase;
+    }
+
+    public String getStatusLine(String httpVersion) {
+        return httpVersion + " " + code + " " + reasonPhrase;
     }
 }

@@ -1,10 +1,13 @@
 package http;
 
 import http.enums.HttpMethod;
+import http.util.HttpRequestUtils;
 import http.util.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HttpRequest {
     private final HttpStartLine startLine;
@@ -62,6 +65,21 @@ public class HttpRequest {
         return headers.getCookie();
     }
 
+    public String getCookie(String key) {
+        String cookieHeader = headers.getCookie();
+        if (cookieHeader == null) {
+            return null;
+        }
+
+        for (String pair : cookieHeader.split(";\\s*")) {
+            String[] kv = pair.split("=", 2);
+            if (kv.length == 2 && kv[0].equals(key)) {
+                return kv[1];
+            }
+        }
+        return null;
+    }
+
     public int getContentLength() {
         return headers.getContentLength();
     }
@@ -76,5 +94,14 @@ public class HttpRequest {
 
     public HttpHeaders getHeaders() {
         return headers;
+    }
+
+    public Map<String, String> getParameters() {
+        if (startLine.getMethod() == HttpMethod.GET && getQueryString() != null) {
+            return HttpRequestUtils.parseQueryParameter(getQueryString());
+        } else if (startLine.getMethod() == HttpMethod.POST && body != null) {
+            return HttpRequestUtils.parseQueryParameter(body);
+        }
+        return new HashMap<>();
     }
 }

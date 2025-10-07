@@ -11,16 +11,18 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class HttpResponse {
+    private static final String WEBAPP_PATH = "webapp";
+    private static final String DEFAULT_HTTP_VERSION = "HTTP/1.1";
     private final DataOutputStream dos;
-    private final String webappPath;
+    private final String httpVersion;
 
     public HttpResponse(OutputStream outputStream) {
-        this(outputStream, "webapp");
+        this(outputStream, DEFAULT_HTTP_VERSION);
     }
 
-    public HttpResponse(OutputStream outputStream, String webappPath) {
+    public HttpResponse(OutputStream outputStream, String httpVersion) {
         this.dos = new DataOutputStream(outputStream);
-        this.webappPath = webappPath;
+        this.httpVersion = httpVersion;
     }
 
     public void forward(String path) throws IOException {
@@ -30,7 +32,7 @@ public class HttpResponse {
             return;
         }
 
-        String filePath = webappPath + path;
+        String filePath = WEBAPP_PATH + path;
 
         // 파일 존재 확인
         if (!Files.exists(Paths.get(filePath))) {
@@ -73,7 +75,7 @@ public class HttpResponse {
     }
 
     private void writeStatusLine(HttpStatus status) throws IOException {
-        dos.writeBytes(status.getStatusLine() + "\r\n");
+        dos.writeBytes(status.getStatusLine(httpVersion) + "\r\n");
     }
 
     private void writeHeader(HttpHeader header, String value) throws IOException {

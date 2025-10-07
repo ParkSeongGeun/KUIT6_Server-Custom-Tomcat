@@ -23,14 +23,15 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
             HttpRequest httpRequest = HttpRequest.from(br);
-            HttpResponse httpResponse = new HttpResponse(out);
+            HttpResponse httpResponse = new HttpResponse(out, httpRequest.getVersion());
 
-            RequestMapper requestMapper = new RequestMapper(httpRequest,httpResponse);
-            requestMapper.proceed();
+            RequestMapper requestMapper = new RequestMapper();
+            requestMapper.getController(httpRequest.getPath(), httpRequest.getMethod())
+                    .execute(httpRequest, httpResponse);
 
         } catch (Exception e) {
             log.log(Level.SEVERE, e.getMessage());
-            System.out.println(Arrays.toString(e.getStackTrace()));
+            log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
         }
     }
 }

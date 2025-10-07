@@ -53,16 +53,4 @@ public class HttpHeaders {
     public String getCookie() {
         return getHeader(HttpHeader.COOKIE);
     }
-
-    public boolean hasHeader(HttpHeader header) {
-        return headers.containsKey(header.getValue());
-    }
-
-    public boolean hasHeader(String headerName) {
-        return headers.containsKey(headerName);
-    }
-
-    public Map<String, String> getAllHeaders() {
-        return new HashMap<>(headers);
-    }
 }

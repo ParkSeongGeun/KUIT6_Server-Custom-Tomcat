@@ -1,109 +1,91 @@
 package webserver;
 
 import controller.*;
-import http.HttpRequest;
-import http.HttpResponse;
 import http.enums.HttpMethod;
 import http.enums.RequestPath;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
-import java.io.IOException;
-
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("RequestMapper 테스트")
 class RequestMapperTest {
-
-    @Mock
-    private HttpRequest mockRequest;
-    
-    @Mock
-    private HttpResponse mockResponse;
 
     private RequestMapper requestMapper;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
-        requestMapper = new RequestMapper(mockRequest, mockResponse);
+        requestMapper = new RequestMapper();
     }
 
     @Test
-    @DisplayName("루트 경로 요청 시 ForwardController가 실행된다")
-    void shouldExecuteForwardControllerWhenRootPath() throws IOException {
+    @DisplayName("루트 경로 요청 시 ForwardController를 반환한다")
+    void shouldReturnForwardControllerWhenRootPath() {
         // given
-        when(mockRequest.getPath()).thenReturn(RequestPath.ROOT.getValue());
-        when(mockRequest.getMethod()).thenReturn(HttpMethod.GET);
+        String path = RequestPath.ROOT.getValue();
+        HttpMethod method = HttpMethod.GET;
 
         // when
-        requestMapper.proceed();
+        Controller controller = requestMapper.getController(path, method);
 
         // then
-        verify(mockRequest, atLeastOnce()).getPath();
-        verify(mockRequest, atLeastOnce()).getMethod();
+        assertInstanceOf(ForwardController.class, controller);
     }
 
     @Test
-    @DisplayName("POST /user/signup 요청 시 UserSignupController가 실행된다")
-    void shouldExecuteUserSignupControllerWhenPostUserSignup() throws IOException {
+    @DisplayName("POST /user/signup 요청 시 UserSignupController를 반환한다")
+    void shouldReturnUserSignupControllerWhenPostUserSignup() {
         // given
-        when(mockRequest.getPath()).thenReturn(RequestPath.USER_SIGNUP.getValue());
-        when(mockRequest.getMethod()).thenReturn(HttpMethod.POST);
+        String path = RequestPath.USER_SIGNUP.getValue();
+        HttpMethod method = HttpMethod.POST;
 
         // when
-        requestMapper.proceed();
+        Controller controller = requestMapper.getController(path, method);
 
         // then
-        verify(mockRequest, atLeastOnce()).getPath();
-        verify(mockRequest, atLeastOnce()).getMethod();
+        assertInstanceOf(UserSignupController.class, controller);
     }
 
     @Test
-    @DisplayName("POST /user/login 요청 시 UserLoginController가 실행된다")
-    void shouldExecuteUserLoginControllerWhenPostUserLogin() throws IOException {
+    @DisplayName("POST /user/login 요청 시 UserLoginController를 반환한다")
+    void shouldReturnUserLoginControllerWhenPostUserLogin() {
         // given
-        when(mockRequest.getPath()).thenReturn(RequestPath.USER_LOGIN.getValue());
-        when(mockRequest.getMethod()).thenReturn(HttpMethod.POST);
+        String path = RequestPath.USER_LOGIN.getValue();
+        HttpMethod method = HttpMethod.POST;
 
         // when
-        requestMapper.proceed();
+        Controller controller = requestMapper.getController(path, method);
 
         // then
-        verify(mockRequest, atLeastOnce()).getPath();
-        verify(mockRequest, atLeastOnce()).getMethod();
+        assertInstanceOf(UserLoginController.class, controller);
     }
 
     @Test
-    @DisplayName("/user/userList 요청 시 UserListController가 실행된다")
-    void shouldExecuteUserListControllerWhenUserList() throws IOException {
+    @DisplayName("/user/userList 요청 시 UserListController를 반환한다")
+    void shouldReturnUserListControllerWhenUserList() {
         // given
-        when(mockRequest.getPath()).thenReturn(RequestPath.USER_LIST.getValue());
-        when(mockRequest.getMethod()).thenReturn(HttpMethod.GET);
+        String path = RequestPath.USER_LIST.getValue();
+        HttpMethod method = HttpMethod.GET;
 
         // when
-        requestMapper.proceed();
+        Controller controller = requestMapper.getController(path, method);
 
         // then
-        verify(mockRequest, atLeastOnce()).getPath();
-        verify(mockRequest, atLeastOnce()).getMethod();
+        assertInstanceOf(UserListController.class, controller);
     }
 
     @Test
-    @DisplayName("알 수 없는 경로 요청 시 ForwardController가 기본으로 실행된다")
-    void shouldExecuteForwardControllerWhenUnknownPath() throws IOException {
+    @DisplayName("알 수 없는 경로 요청 시 ForwardController를 기본으로 반환한다")
+    void shouldReturnForwardControllerWhenUnknownPath() {
         // given
-        when(mockRequest.getPath()).thenReturn("/unknown/path");
-        when(mockRequest.getMethod()).thenReturn(HttpMethod.GET);
+        String path = "/unknown/path";
+        HttpMethod method = HttpMethod.GET;
 
         // when
-        requestMapper.proceed();
+        Controller controller = requestMapper.getController(path, method);
 
         // then
-        verify(mockRequest, atLeastOnce()).getPath();
-        verify(mockRequest, atLeastOnce()).getMethod();
+        assertInstanceOf(ForwardController.class, controller);
     }
 }

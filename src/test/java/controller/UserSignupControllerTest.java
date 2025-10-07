@@ -39,16 +39,19 @@ public class UserSignupControllerTest {
     @DisplayName("POST 요청으로 유효한 사용자 정보를 전송하면 회원가입이 성공해야 한다")
     public void signupSuccessWithPostRequest() throws IOException {
         // given
-        when(mockRequest.getMethod()).thenReturn(HttpMethod.POST);
-        when(mockRequest.getBody()).thenReturn("userId=testuser&password=1234&name=홍길동&email=test@example.com");
-        when(mockRequest.getQueryString()).thenReturn(null);
+        when(mockRequest.getParameters()).thenReturn(java.util.Map.of(
+            "userId", "testuser",
+            "password", "1234",
+            "name", "홍길동",
+            "email", "test@example.com"
+        ));
 
         // when
         controller.execute(mockRequest, mockResponse);
 
         // then
         verify(mockResponse).redirect(RequestPath.INDEX.getValue());
-        
+
         User savedUser = repository.findUserById("testuser");
         assertNotNull(savedUser, "사용자가 저장되어야 한다");
         assertEquals("testuser", savedUser.getUserId());
@@ -61,16 +64,19 @@ public class UserSignupControllerTest {
     @DisplayName("POST 요청으로 다른 유효한 사용자 정보를 전송하면 회원가입이 성공해야 한다")
     public void signupSuccessWithAnotherPostRequest() throws IOException {
         // given
-        when(mockRequest.getMethod()).thenReturn(HttpMethod.POST);
-        when(mockRequest.getBody()).thenReturn("userId=getuser&password=5678&name=김철수&email=get@example.com");
-        when(mockRequest.getQueryString()).thenReturn(null);
+        when(mockRequest.getParameters()).thenReturn(java.util.Map.of(
+            "userId", "getuser",
+            "password", "5678",
+            "name", "김철수",
+            "email", "get@example.com"
+        ));
 
         // when
         controller.execute(mockRequest, mockResponse);
 
         // then
         verify(mockResponse).redirect(RequestPath.INDEX.getValue());
-        
+
         User savedUser = repository.findUserById("getuser");
         assertNotNull(savedUser, "사용자가 저장되어야 한다");
         assertEquals("getuser", savedUser.getUserId());

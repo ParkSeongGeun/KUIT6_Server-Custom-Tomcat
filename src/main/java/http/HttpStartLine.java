@@ -6,11 +6,23 @@ public class HttpStartLine {
     private final HttpMethod method;
     private final String path;
     private final String version;
+    private final String pathWithoutQuery;
+    private final String queryString;
 
     public HttpStartLine(HttpMethod method, String path, String version) {
         this.method = method;
         this.path = path;
         this.version = version;
+
+        // 생성 시 한 번만 파싱
+        int queryIndex = path.indexOf("?");
+        if (queryIndex != -1) {
+            this.pathWithoutQuery = path.substring(0, queryIndex);
+            this.queryString = path.substring(queryIndex + 1);
+        } else {
+            this.pathWithoutQuery = path;
+            this.queryString = null;
+        }
     }
 
     public static HttpStartLine from(String requestLine) {
@@ -43,16 +55,10 @@ public class HttpStartLine {
     }
 
     public String getPathWithoutQuery() {
-        if (path.contains("?")) {
-            return path.substring(0, path.indexOf("?"));
-        }
-        return path;
+        return pathWithoutQuery;
     }
 
     public String getQueryString() {
-        if (path.contains("?")) {
-            return path.substring(path.indexOf("?") + 1);
-        }
-        return null;
+        return queryString;
     }
 }
